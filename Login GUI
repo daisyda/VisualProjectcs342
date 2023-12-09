@@ -1,0 +1,130 @@
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class LoginApplication extends JFrame implements ActionListener {
+
+    private JTextField t1;
+    private JPasswordField t2;
+    private JButton b1, b2;
+    private JLabel l1, l2;
+    private static final String DATABASE_URL = "jdbc:ucanaccess://C:/Users/Rafeef/javaApps/firsttry/Database1.accdb";
+    private static final String user = "";
+    private static final String password = "";
+
+    public LoginApplication(String name) {
+        super(name);
+        setSize(500, 500);
+        setLocation(500, 600);
+
+        l1 = new JLabel("Login");
+        l2 = new JLabel("Password ");
+
+        t1 = new JTextField(20);
+        t2 = new JPasswordField(20);
+
+        b1 = new JButton("Enter");
+        b2 = new JButton("Cancel");
+
+        JPanel p = (JPanel) getContentPane();
+        p.setLayout(new GridLayout(2, 1));
+
+        JPanel p1 = new JPanel();
+        p1.setLayout(new GridLayout(2, 2));
+        p1.add(l1);
+        p1.add(t1);
+        p1.add(l2);
+        p1.add(t2);
+        JPanel p2 = new JPanel();
+        p2.setLayout(new FlowLayout(FlowLayout.CENTER));
+        p2.add(b1);
+        p2.add(b2);
+
+        p.add(p1);
+        p.add(p2);
+
+        b1.addActionListener(this);
+        b2.addActionListener(this);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        JButton bt = (JButton) e.getSource();
+        if (bt == b1) {
+            String login = t1.getText();
+            String password = new String(t2.getPassword());
+
+            // Perform login verification
+            if (verifyLogin(login, password)) {
+                if (isAdmin(login)) {
+                    // Open admin page
+                    JOptionPane.showMessageDialog(null, "Welcome, Admin!");
+                } else {
+                    // Open user page
+                    JOptionPane.showMessageDialog(null, "Welcome, User!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Check Your Login and Password", "Input Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            t1.setText(null);
+            t2.setText(null);
+        }
+    }
+
+    private boolean verifyLogin(String user, String password) {
+        try (Connection connection = getConnection()) {
+            // Prepare the SQL statement
+            String query = "SELECT username, password FROM Users WHERE username = ? AND password = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, user);
+                statement.setString(2, password);
+
+                // Execute the query
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    // Return true if at least one row is found in the result set
+                    return resultSet.isBeforeFirst();
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean isAdmin(String login) {
+        // TODO: Implement logic to check if the user is an admin
+        // Check if the login belongs to an admin
+        return login.equals("admin"); // Replace with your own logic
+    }
+
+    private Connection getConnection() throws SQLException {
+        try {
+            Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Attempting to connect to the database...");
+        System.out.println("Database URL: " + DATABASE_URL);
+        System.out.println("User: " + user);
+        System.out.println("Password: " + password);
+
+        Connection connection = DriverManager.getConnection(DATABASE_URL, user, password);
+        System.out.println("Connection successful!");
+
+        return connection;
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new LoginApplication("Login Page"));
+    }
+}
