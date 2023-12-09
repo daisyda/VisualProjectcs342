@@ -1,0 +1,122 @@
+import javax.swing.*; 
+import java.io.*; 
+import java.util.*; 
+import java.awt.*; 
+import java.awt.event.*; 
+import java.awt.event.ActionEvent; 
+import java.awt.event.ActionListener; 
+  
+  
+public class SearchPage extends JFrame{ 
+     
+    private JLabel l1, l2, l3; 
+    private JButton b1, b2, b3; 
+    private JTextField t1, t2; 
+    private JTextArea ta; 
+    private JPanel p1, p2, pC, pG; 
+     
+    public SearchPage() 
+    { 
+        super("Saecrh"); 
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); 
+        setLocation(600, 300); 
+         
+        p1 = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
+        l1 = new JLabel("File to search:"); 
+        t1 = new JTextField(20); 
+        p1.add(l1); 
+        p1.add(t1); 
+         
+        p2 = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+        l2 = new JLabel("Keywords"); 
+        t2 = new JTextField(20); 
+        b1 = new JButton("Search"); 
+        b2 = new JButton("Clear"); 
+        b3 = new JButton("Cancel"); 
+        p2.add(l2); 
+        p2.add(t2); 
+        p2.add(b1); 
+        p2.add(b2); 
+        p2.add(b3); 
+         
+        ta = new JTextArea(); 
+        ta.setRows(20); 
+        JScrollPane scrollPane = new JScrollPane(ta); // Enclose the text area within a scroll pane         
+        pC = new JPanel(); 
+        pC.setLayout(new GridLayout(2, 1)); 
+         
+        pC.add(p1); 
+        pC.add(p2); 
+         
+        pG = (JPanel)getContentPane(); 
+        pG.setLayout(new BorderLayout()); 
+         
+        pG.add(pC,BorderLayout.NORTH); 
+        pG.add(ta, BorderLayout.SOUTH); 
+         
+        b1.addActionListener(new ButtonSearchListener()); 
+        b2.addActionListener(new ButtonClearListener()); 
+        b3.addActionListener(new ButtonCancelListener());         
+  
+        setVisible(true); 
+        pack(); 
+    } 
+     
+     
+    public class ButtonSearchListener implements ActionListener { 
+    public void actionPerformed(ActionEvent a) { 
+        String fileName = t1.getText() + ".txt"; 
+        String keyword = t2.getText(); 
+        FileInputStream file; 
+            ObjectInputStream obj; 
+            BufferedReader br; 
+            String lin = null; 
+            try { 
+                br = new BufferedReader(new FileReader(fileName)); 
+                int i = 0; 
+                while ((lin = br.readLine()) != null)  
+                { 
+                    if(lin.contains(keyword)) 
+                    { 
+                        ta.append(lin + "\n"); 
+                    }                 
+                    i++; 
+                } 
+            } 
+        catch (FileNotFoundException e) { 
+            System.out.println("The file Accepted.txt is not found"); 
+        } catch (IOException e) { 
+            System.out.println("Exception of I/O: " + e.getMessage()); 
+        } 
+    } 
+    } 
+     
+    public class ButtonClearListener implements ActionListener { 
+    public void actionPerformed(ActionEvent a)  
+    { 
+        t1.setText(""); 
+        t2.setText(""); 
+        ta.setText(""); 
+    } 
+    } 
+     
+    public class ButtonCancelListener implements ActionListener { 
+    public void actionPerformed(ActionEvent a)  
+    { 
+        int n = JOptionPane.showConfirmDialog(null, "Do you want to cancel?", " ", JOptionPane.YES_NO_OPTION); 
+             
+            if(n == 0) 
+                System.exit(0); 
+            else 
+                JOptionPane.showMessageDialog(null, "Ok you don't want to cancel"); 
+    } 
+    } 
+     
+    public static void main(String[] args) { 
+        // TODO code application logic here 
+        SearchPage obj = new SearchPage(); 
+        obj.show(); 
+    } 
+     
+    } 
+ 
