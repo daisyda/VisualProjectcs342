@@ -1,0 +1,66 @@
+import java.awt.*; 
+import java.awt.event.ActionEvent; 
+import java.awt.event.ActionListener; 
+import java.io.BufferedReader; 
+import java.io.FileNotFoundException; 
+import java.io.FileReader; 
+import java.io.IOException; 
+import javax.swing.*; 
+/** 
+* 
+* @author rim2z 
+*/ 
+public class Statistics extends JFrame implements ActionListener{ 
+     
+    private JLabel l1; 
+    private JButton b1; 
+    private JTextField t1; 
+     
+     
+    public Statistics(String name){ 
+        super(name); 
+        setSize(500,500); 
+        setLocation(500,600); 
+     
+        l1=new JLabel("File for Statistics: "); 
+        t1=new JTextField(30);  
+        b1=new JButton("Calculate"); 
+     
+        JPanel p =(JPanel)getContentPane(); 
+        p.setLayout(new FlowLayout(FlowLayout.CENTER)); 
+        p.add(l1); 
+        p.add(t1); 
+        p.add(b1); 
+         
+        pack(); 
+        setVisible(true);  
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); 
+         
+        b1.addActionListener(this); 
+  
+    } 
+    @Override 
+         public void actionPerformed(ActionEvent e) { 
+            String line ,arr[]; 
+            String filename = t1.getText() + ".txt";  
+            int more_equall =0 ,less =0 , grade; 
+             
+            try {    
+                BufferedReader f =new BufferedReader(new FileReader(filename)); 
+                while((line = f.readLine()) != null){ 
+                arr=line.split(" "); 
+                grade = Integer.parseInt(arr[1]);  
+                if(grade >= 10){ 
+                    more_equall++; 
+                } 
+                else less++; 
+                } 
+                JOptionPane.showMessageDialog(null, "Number of lines with numbers >=10 : "+more_equall+"\nNumber of lines with numbers <10 : "+less, "Statistics", JOptionPane.INFORMATION_MESSAGE); 
+                f.close();    
+            }catch (IOException ex) { 
+             System.out.println("The file Accepted.txt is not found"); 
+        }  
+           
+         } 
+} 
+ 
