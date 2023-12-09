@@ -1,0 +1,120 @@
+import javax.swing.*; 
+import java.awt.*; 
+import java.awt.event.ActionEvent; 
+import java.awt.event.ActionListener; 
+import java.io.BufferedWriter; 
+import java.io.FileWriter; 
+import java.io.IOException; 
+import java.util.logging.Level; 
+import java.util.logging.Logger; 
+import SearchPage.SearchPage ; 
+import static com.sun.java.accessibility.util.AWTEventMonitor.addActionListener; 
+  
+public class TextEditor extends JFrame implements ActionListener { 
+    private JLabel l1, l2; 
+    private JTextField t1; 
+    private JTextArea t2; 
+    private JButton b1, b2, b3; 
+    private String title, content; 
+  
+    public TextEditor(String title) { 
+        super(title); 
+        this.setLocation(300, 300); 
+        //this.setSize(600, 600); 
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+  
+        l1 = new JLabel("File"); 
+        JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+        p1.add(l1); 
+  
+        l2 = new JLabel("Title:"); 
+        t1 = new JTextField(20); 
+        JPanel p2 = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
+        p2.add(l2); 
+        p2.add(t1); 
+  
+        t2 = new JTextArea(); 
+        t2.setRows(20); 
+        t2.setColumns(40); 
+        JScrollPane scrollPane = new JScrollPane(t2); 
+  
+        b1 = new JButton("Save"); 
+        b2 = new JButton("Search"); 
+        b3 = new JButton("Clear"); 
+  
+        JPanel p3 = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
+        p3.add(b1); 
+        p3.add(b2); 
+        p3.add(b3); 
+  
+        JPanel pG = new JPanel(new GridLayout(2, 1)); 
+        pG.setLayout(new GridLayout(2, 1)); 
+        pG.add(p1); 
+        pG.add(p2); 
+  
+        JPanel p = (JPanel) this.getContentPane(); 
+        p.add(pG, BorderLayout.NORTH); 
+        p.add(t2, BorderLayout.CENTER); 
+        p.add(p3, BorderLayout.SOUTH); 
+  
+        b1.addActionListener(this); 
+        b2.addActionListener(this); 
+        b3.addActionListener(this); 
+         
+  
+        this.pack(); 
+        this.setVisible(true); 
+    } 
+  
+    @Override 
+    public void actionPerformed(ActionEvent ae) { 
+        if(ae.getSource() == b1) 
+        { 
+            title = t1.getText(); 
+            content = t2.getText(); 
+  
+            try { 
+                BufferedWriter file = new BufferedWriter(new FileWriter(title, true)); 
+                file.write(content); 
+                file.newLine(); 
+                file.close(); 
+                t1.setText(""); 
+                t2.setText(""); 
+                JOptionPane.showMessageDialog(null , "File saved successfully"); 
+            } catch (IOException ex) { 
+                Logger.getLogger(TextEditor.class.getName()).log(Level.SEVERE, null, ex); 
+                JOptionPane.showMessageDialog(null, "Error occurred while saving the file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
+            } 
+        } 
+        else if(ae.getSource() == b2) 
+        { 
+            SearchPage  newPage = new SearchPage (); 
+                    newPage.show(); 
+        } 
+        else if(ae.getSource() == b3) 
+        { 
+            t1.setText(""); 
+            t2.setText(""); 
+        } 
+    } 
+  
+    public static void main(String[] args) { 
+        TextEditor a = new TextEditor("Text Editor"); 
+    } 
+} 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
