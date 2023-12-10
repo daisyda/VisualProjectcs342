@@ -66,11 +66,12 @@ public class LoginApplication extends JFrame implements ActionListener {
             if (verifyLogin(login, password)) {
                 if (isAdmin(login)) {
                     // Open admin page
-                    JOptionPane.showMessageDialog(null, "Welcome, Admin!");
+                    Admin adminPage = new Admin("Admin Page");
                 } else {
-                    // Open user page
-                    JOptionPane.showMessageDialog(null, "Welcome, User!");
+                    // Open text editor for regular users
+                    TextEditor textEditor = new TextEditor("Text Editor");
                 }
+                dispose();  // Close the login window
             } else {
                 JOptionPane.showMessageDialog(null, "Check Your Login and Password", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
