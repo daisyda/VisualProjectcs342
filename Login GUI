@@ -71,7 +71,7 @@ public class LoginApplication extends JFrame implements ActionListener {
                     // Open text editor for regular users
                     TextEditor textEditor = new TextEditor("Text Editor");
                 }
-                dispose();  // Close the login window
+                dispose();
             } else {
                 JOptionPane.showMessageDialog(null, "Check Your Login and Password", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -104,7 +104,7 @@ public class LoginApplication extends JFrame implements ActionListener {
     private boolean isAdmin(String login) {
         // TODO: Implement logic to check if the user is an admin
         // Check if the login belongs to an admin
-        return login.equals("admin"); // Replace with your own logic
+        return login.equals("admin"); 
     }
 
     private Connection getConnection() throws SQLException {
