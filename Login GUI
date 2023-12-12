@@ -125,7 +125,10 @@ public class LoginApplication extends JFrame implements ActionListener {
         return connection;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginApplication("Login Page"));
-    }
+   public static void main(String[] args) {
+   
+    LoginApplication loginApp = new LoginApplication("Login Page");
+    loginApp.setVisible(true);
+}
+
 }
